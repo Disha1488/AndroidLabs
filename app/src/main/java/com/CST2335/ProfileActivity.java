@@ -1,49 +1,60 @@
 package com.CST2335;
 
-import android.content.Intent;
-//import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.graphics.Bitmap;
-import android.util.Log;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.provider.MediaStore;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ProfileActivity extends AppCompatActivity {
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.provider.MediaStore;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.util.Log;
+import android.widget.TextView;
 
+public class ProfileActivity extends AppCompatActivity {
+    private ImageButton button;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageButton takePictureBtn;
+    private ImageButton mImageButton;
+    TextView emailEditText;
     public static final String ACTIVITY_NAME = "PROFILE_ACTIVITY";
+    private Button buttonChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // get the intent that got us here
-        Intent loginPage = getIntent();
+        button = findViewById(R.id.imageButton);
+        mImageButton = findViewById(R.id.imageButton);
+        emailEditText= findViewById(R.id.email);
+        buttonChat=(Button)findViewById(R.id.buttonChat);
 
-        String emailTyped = loginPage.getStringExtra("emailTyped");
-
-        //Put the string that was sent from FirstActivity into the edit text:
-        EditText enterText = (EditText) findViewById(R.id.EmailEditText);
-        enterText.setText(emailTyped);
-
-        takePictureBtn = (ImageButton) findViewById(R.id.ImageButton);
-        takePictureBtn.setOnClickListener(c -> {
-
-
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-
+        button.setOnClickListener(e -> {
+            dispatchTakePictureIntent();
         });
-        Log.d(ACTIVITY_NAME, "In function: onCreate()");
 
+        buttonChat.setOnClickListener(e ->{
+            Intent goToChat = new Intent(ProfileActivity.this, ChatRoomActivity.class);
+            startActivity(goToChat);
+        });
 
+        Intent fromMain = getIntent(); //declare intent//get info from MainActivity
+        emailEditText.setText(fromMain.getStringExtra("EMAIL"));//put info into EditText (dong` email: Enter your email
+
+        Log.e(ACTIVITY_NAME, "In function: onCreate");
+
+    }
+
+    private void dispatchTakePictureIntent(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 
     @Override
@@ -52,34 +63,42 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            takePictureBtn.setImageBitmap(imageBitmap);
+            mImageButton.setImageBitmap(imageBitmap);
         }
-        Log.d(ACTIVITY_NAME, "In function: onActivityResult()");
+        Log.e(ACTIVITY_NAME, "In function: onActivityResult");
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(ACTIVITY_NAME, "In function: onStart()");
+        Log.e(ACTIVITY_NAME, "In function: onStart");
     }
+
+
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(ACTIVITY_NAME, "In function: onResume()");
+        Log.e(ACTIVITY_NAME, "In function: onResume");
     }
+
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(ACTIVITY_NAME, "In function: onPause()");
+        Log.e(ACTIVITY_NAME, "In function: onPause");
     }
+
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(ACTIVITY_NAME, "In function: onStop()");
+        Log.e(ACTIVITY_NAME, "In function: onStop");
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(ACTIVITY_NAME, "In function: onDestroy()");
+        Log.e(ACTIVITY_NAME, "In function: onDestroy");
     }
+
+
 }
